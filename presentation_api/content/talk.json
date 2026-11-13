@@ -1,362 +1,440 @@
 {
-  "dependencyCount": 0,
-  "steps": [
-    {
-      "id": "join", "type": "lobby", "theme": "part1",
-      "budgetSec": 120,
-      "notes": "- Welcome people, point at the QR code and the room code.\n- Wait until the count stops rising, then go.",
-      "title": "Join the game",
-      "phone": "You're in, wait for the start"
-    },
-    {
-      "id": "which-is-worse", "type": "poll", "theme": "part1",
-      "budgetSec": 60,
-      "notes": "- **Open poll**, give 20 s, **Close**. Do NOT reveal: the result comes back at step 28.\n- Say: \"Keep your answer in mind, we'll ask again at the end.\"",
-      "title": "Which is worse?",
-      "question": "Which is worse?",
-      "hideResults": true,
-      "options": [
-        { "id": "bug", "label": "A bug that crashes millions of computers" },
-        { "id": "feature", "label": "A feature that tricks millions of users" }
-      ]
-    },
-    {
-      "id": "title", "type": "slide", "theme": "part1",
-      "budgetSec": 45,
-      "notes": "- Introduce yourself in one sentence.\n- Two parts: code that hurts by **accident**, and code that hurts by **design**.",
-      "title": "Code With Consequences",
-      "body": "When software hurts people, by accident and by design.\n\n@samy"
-    },
-    {
-      "id": "part-1", "type": "slide", "theme": "part1",
-      "budgetSec": 15,
-      "notes": "- Quick transition. Three incidents, one question each.",
-      "title": "Part 1: When code breaks the world"
-    },
-    {
-      "id": "left-pad-setup", "type": "slide", "theme": "part1",
-      "budgetSec": 75,
-      "notes": "- March 2016: a dev unpublishes 250+ npm packages after a name dispute with Kik.\n- One of them, left-pad, was 11 lines. Thousands of builds broke (React, Babel...).\n- Don't reveal the size yet: next is the guess.",
-      "title": "left-pad",
-      "body": "- **2016**, npm\n- A name dispute with Kik\n- **250+** modules unpublished in one afternoon"
-    },
-    {
-      "id": "dependency-guess", "type": "poll", "theme": "part1",
-      "budgetSec": 45,
-      "notes": "- **Open poll**, ~20 s, **Close**, then Next (the reveal step shows the answer).\n- Check that `dependencyCount` and `correctOptionId` are filled in talk.json!",
-      "title": "Guess our dependency count",
-      "question": "How many dependencies does our project have?",
-      "correctOptionId": "500-1000",
-      "options": [
-        { "id": "under-100", "label": "Under 100" },
-        { "id": "100-500", "label": "100–500" },
-        { "id": "500-1000", "label": "500–1,000" },
-        { "id": "over-1000", "label": "Over 1,000" }
-      ]
-    },
-    {
-      "id": "left-pad-reveal", "type": "reveal", "theme": "part1",
-      "budgetSec": 90,
-      "notes": "- Read the real dependency count slowly.\n- Point at the 11 lines: anyone could write this.\n- Lesson: **every dependency is a trust decision**.",
-      "title": "left-pad: the reveal",
-      "pollId": "dependency-guess",
-      "body": "Every dependency is a trust decision.",
-      "code": "module.exports = leftpad;\nfunction leftpad (str, len, ch) {\n  str = String(str);\n  var i = -1;\n  if (!ch && ch !== 0) ch = ' ';\n  len = len - str.length;\n  while (++i < len) {\n    str = ch + str;\n  }\n  return str;\n}"
-    },
-    {
-      "id": "knight-setup", "type": "slide", "theme": "part1",
-      "budgetSec": 60,
-      "notes": "- Aug 1 2012, Knight Capital, new code deployed to 8 servers.\n- Market opens 9:30, something starts buying. Fast.\n- Don't say the cause.",
-      "title": "Knight Capital",
-      "body": "- **August 1, 2012**\n- A trading firm\n- A new deploy to **8** servers"
-    },
-    {
-      "id": "knight-cause", "type": "poll", "theme": "part1",
-      "budgetSec": 45,
-      "notes": "- **Open poll**, ~20 s, **Close**, then Next for the reveal.\n- Answer: old code nobody deleted.",
-      "title": "What caused it?",
-      "question": "What caused it?",
-      "correctOptionId": "dead-code",
-      "options": [
-        { "id": "hacker", "label": "Hacker" },
-        { "id": "typo", "label": "Typo" },
-        { "id": "dead-code", "label": "Old code nobody deleted" },
-        { "id": "algorithm", "label": "Bad algorithm" }
-      ]
-    },
-    {
-      "id": "knight-reveal", "type": "reveal", "theme": "part1",
-      "budgetSec": 90,
-      "notes": "- One of 8 servers missed the deploy; a recycled flag woke up dead \"Power Peg\" code.\n- ~$440M lost in ~45 min (company figure; the SEC says more than $460M).\n- Lessons: delete dead code, never recycle flags, automate deploys.",
-      "title": "Knight Capital: the reveal",
-      "pollId": "knight-cause",
-      "body": "- Dead *Power Peg* code, a recycled flag, one server missed\n- About **$440M** lost in about **45 min**\n- Delete dead code, never recycle flags, automate deploys"
-    },
-    {
-      "id": "crowdstrike-setup", "type": "slide", "theme": "part1",
-      "budgetSec": 60,
-      "notes": "- July 19 2024, a content update for the Falcon sensor.\n- ~8.5M Windows machines blue-screened: airlines, hospitals, banks.",
-      "title": "CrowdStrike",
-      "body": "- **July 19, 2024**\n- About **8.5M** Windows machines\n- Airlines and hospitals down"
-    },
-    {
-      "id": "crowdstrike-prevent", "type": "poll", "theme": "part1",
-      "budgetSec": 45,
-      "notes": "- **Open poll**, ~20 s, **Close**, **Reveal results** (opinion poll, no right answer).\n- Ask one person why they picked their option.",
-      "title": "What would have prevented it?",
-      "question": "What would have prevented it?",
-      "options": [
-        { "id": "tests", "label": "Better tests" },
-        { "id": "staged-rollout", "label": "Staged rollout" },
-        { "id": "code-review", "label": "Code review" },
-        { "id": "no-kernel", "label": "Not running in the kernel" }
-      ]
-    },
-    {
-      "id": "crowdstrike-reveal", "type": "slide", "theme": "part1",
-      "budgetSec": 90,
-      "notes": "- The template expected 21 fields, the sensor supplied 20: out-of-bounds read in the kernel.\n- Shipped to every machine at once, live ~78 minutes.\n- Myth: the \"file full of zeros\" was not the root cause.",
-      "title": "CrowdStrike: the root cause",
-      "body": "- **21** fields expected, **20** supplied\n- Sent to every machine at once, live for about **78 minutes**\n- Myth: the \"file full of zeros\" was not the cause"
-    },
-    {
-      "id": "transition", "type": "slide", "theme": "part1",
-      "budgetSec": 20,
-      "notes": "- Pause. Let the line land.\n- \"Now: code that works exactly as designed.\"",
-      "title": "Those were accidents.",
-      "body": "Now: code that works exactly as designed."
-    },
-    {
-      "id": "dark-pattern", "type": "slide", "theme": "part2",
-      "budgetSec": 60,
-      "notes": "- Definition: an interface designed to make you do something you didn't mean to.\n- Term coined by Harry Brignull around 2010.",
-      "title": "What is a dark pattern?",
-      "body": "An interface designed to make you do something you didn't mean to do.\n\nTerm coined by Harry Brignull, around **2010**."
-    },
-    {
-      "id": "amazon-iliad", "type": "slide", "theme": "part2",
-      "budgetSec": 90,
-      "notes": "- Sept 2025: Amazon pays $2.5B to settle the FTC Prime case.\n- The cancel flow was nicknamed *Iliad* internally: long like the epic.\n- Button text example: \"No, I don't want Free Shipping\".",
-      "title": "The Amazon \"Iliad\" case",
-      "body": "- **$2.5B** FTC settlement, Sept 2025\n- A cancel flow nicknamed *Iliad*\n- \"No, I don't want Free Shipping\""
-    },
-    {
-      "id": "game-rules", "type": "slide", "theme": "part2",
-      "budgetSec": 45,
-      "notes": "- Tap the element, **Lock in**; clean screen = **No pattern here**.\n- +100 correct, up to +50 speed, -50 wrong. 30 s per round.\n- In each round, **Start round** starts a 3 s countdown.",
-      "title": "Spot the Dark Pattern",
-      "phone": "Get ready! Tap the manipulative element, then Lock in. Clean screen? Tap \"No pattern here\".",
-      "body": "- Tap the manipulative element, then **Lock in**\n- Clean screen? Tap **No pattern here**\n- Correct: **+100**, up to **+50** for speed\n- Wrong: **−50**"
-    },
-    {
-      "id": "round-1", "type": "game-round", "theme": "part2",
-      "budgetSec": 75,
-      "notes": "- Flow: **Start round** > wait for locks > **Show heatmap** > **Reveal answer** > **Show leaderboard** > Next.\n- Answer: the urgency banner (fake urgency).",
-      "title": "Round 1: ShopNest",
-      "round": 1, "product": "ShopNest", "screenComponent": "ShopNest",
-      "context": "You're buying a sofa",
-      "elements": [
-        { "id": "product-photo", "label": "Product photo" },
-        { "id": "price", "label": "Price" },
-        { "id": "urgency-banner", "label": "Urgency banner and timer" },
-        { "id": "add-to-cart", "label": "Add to cart" },
-        { "id": "reviews", "label": "Reviews" },
-        { "id": "delivery-info", "label": "Delivery info" },
-        { "id": "wishlist", "label": "Save to wishlist" }
-      ],
-      "answers": [["urgency-banner"]],
-      "patternName": "Fake urgency and scarcity",
-      "explanation": "The counter and timer are invented to rush you; reload the page and they reset."
-    },
-    {
-      "id": "round-2", "type": "game-round", "theme": "part2",
-      "budgetSec": 75,
-      "notes": "- Answer: the \"Manage options\" link (Accept all also counts). Visual interference.",
-      "title": "Round 2: StreamBox",
-      "round": 2, "product": "StreamBox", "screenComponent": "StreamBox",
-      "context": "You just opened a streaming site",
-      "elements": [
-        { "id": "brand-logo", "label": "StreamBox logo" },
-        { "id": "modal-title", "label": "Modal title" },
-        { "id": "privacy-text", "label": "Consent text" },
-        { "id": "privacy-policy", "label": "Privacy policy link" },
-        { "id": "accept-all", "label": "Accept all" },
-        { "id": "manage-options", "label": "Manage options" }
-      ],
-      "answers": [["manage-options", "accept-all"]],
-      "patternName": "Visual interference",
-      "explanation": "Both choices exist, but one is designed to be almost invisible."
-    },
-    {
-      "id": "round-3", "type": "game-round", "theme": "part2",
-      "budgetSec": 75,
-      "notes": "- CLEAN screen: the right answer is \"No pattern here\".\n- Point out: cancel is as visible as change plan, renewal date shown.",
-      "title": "Round 3: FitTrack",
-      "round": 3, "product": "FitTrack", "screenComponent": "FitTrack",
-      "context": "You're checking your subscription",
-      "elements": [
-        { "id": "plan-card", "label": "Current plan" },
-        { "id": "renewal-date", "label": "Renewal date" },
-        { "id": "payment-method", "label": "Payment method" },
-        { "id": "billing-history", "label": "Billing history" },
-        { "id": "change-plan", "label": "Change plan" },
-        { "id": "cancel-subscription", "label": "Cancel subscription" },
-        { "id": "help-link", "label": "Help link" }
-      ],
-      "answers": [],
-      "patternName": "Clean",
-      "explanation": "Cancelling is as easy as subscribing, and the renewal date is visible."
-    },
-    {
-      "id": "round-4", "type": "game-round", "theme": "part2",
-      "budgetSec": 75,
-      "notes": "- Answer: the pre-checked travel protection (sneaking into basket).",
-      "title": "Round 4: TravelGo",
-      "round": 4, "product": "TravelGo", "screenComponent": "TravelGo",
-      "context": "You're paying for a flight",
-      "elements": [
-        { "id": "flight-card", "label": "Flight summary" },
-        { "id": "passenger", "label": "Passenger" },
-        { "id": "seat", "label": "Seat" },
-        { "id": "travel-protection", "label": "Travel protection checkbox" },
-        { "id": "price-breakdown", "label": "Price breakdown" },
-        { "id": "pay-button", "label": "Pay button" }
-      ],
-      "answers": [["travel-protection"]],
-      "patternName": "Preselection (sneaking into basket)",
-      "explanation": "You pay for something you never chose unless you notice and uncheck it."
-    },
-    {
-      "id": "round-5", "type": "game-round", "theme": "part2",
-      "budgetSec": 75,
-      "notes": "- Answer: the decline link \"No thanks, I prefer being uninformed\" (confirmshaming).",
-      "title": "Round 5: NewsDaily",
-      "round": 5, "product": "NewsDaily", "screenComponent": "NewsDaily",
-      "context": "You're reading an article",
-      "elements": [
-        { "id": "masthead", "label": "Masthead" },
-        { "id": "article", "label": "Article" },
-        { "id": "brief-title", "label": "Get the morning brief" },
-        { "id": "email-field", "label": "Email field" },
-        { "id": "subscribe-button", "label": "Subscribe" },
-        { "id": "decline-link", "label": "Decline link" },
-        { "id": "fine-print", "label": "Fine print" }
-      ],
-      "answers": [["decline-link"]],
-      "patternName": "Confirmshaming",
-      "explanation": "Saying no is worded to make you feel bad about yourself."
-    },
-    {
-      "id": "round-6", "type": "game-round", "theme": "part2",
-      "budgetSec": 75,
-      "notes": "- CLEAN screen: price, end date and the way out are all stated up front.",
-      "title": "Round 6: ReadMore",
-      "round": 6, "product": "ReadMore", "screenComponent": "ReadMore",
-      "context": "You're starting a free trial",
-      "elements": [
-        { "id": "book-art", "label": "Book covers" },
-        { "id": "trial-price", "label": "Price after trial" },
-        { "id": "reminder-note", "label": "Reminder note" },
-        { "id": "cancel-note", "label": "Cancel note" },
-        { "id": "email-field", "label": "Email field" },
-        { "id": "start-trial", "label": "Start trial" },
-        { "id": "sign-in-link", "label": "Sign in link" }
-      ],
-      "answers": [],
-      "patternName": "Clean",
-      "explanation": "The price, the end date and the way out are all stated up front."
-    },
-    {
-      "id": "round-7", "type": "game-round", "theme": "part2",
-      "budgetSec": 150,
-      "notes": "- DEBATE round: not scored, no leaderboard.\n- After the reveal, ask one person from each side to defend their choice. Keep it to ~1 min.",
-      "title": "Round 7: CloudPix (debate)",
-      "round": 7, "product": "CloudPix", "screenComponent": "CloudPixPlans",
-      "context": "You're choosing a storage plan",
-      "elements": [
-        { "id": "storage-info", "label": "Storage info" },
-        { "id": "monthly-plan", "label": "Monthly plan" },
-        { "id": "yearly-plan", "label": "Yearly plan (pre-selected)" },
-        { "id": "save-badge", "label": "Save 17% badge" },
-        { "id": "continue-button", "label": "Continue" },
-        { "id": "terms-link", "label": "Terms link" }
-      ],
-      "answers": [],
-      "scored": false,
-      "patternName": "Grey zone: nudge or manipulation?",
-      "explanation": "Look at how the room split. One person from each side: defend your choice."
-    },
-    {
-      "id": "round-8", "type": "game-round", "theme": "part2",
-      "budgetSec": 90,
-      "notes": "- BONUS: two patterns, players lock up to 2 elements.\n- Answers: \"Step 4 of 5\" (or the Continue cancelling link) + the double-negative checkbox.\n- Tie back to Amazon's Iliad.",
-      "title": "Round 8: CloudPix (bonus)",
-      "round": 8, "product": "CloudPix", "screenComponent": "CloudPixCancel",
-      "context": "BONUS: find both. You're cancelling your plan",
-      "elements": [
-        { "id": "step-indicator", "label": "Step 4 of 5" },
-        { "id": "memories-card", "label": "Memories card" },
-        { "id": "offer-card", "label": "Offer card" },
-        { "id": "double-negative", "label": "Double-negative checkbox" },
-        { "id": "keep-plan", "label": "Keep my 2 TB" },
-        { "id": "continue-cancelling", "label": "Continue cancelling" }
-      ],
-      "answers": [["step-indicator", "continue-cancelling"], ["double-negative"]],
-      "maxSelections": 2,
-      "patternName": "Obstruction (roach motel) + Trick wording",
-      "explanation": "Leaving takes five screens while joining took one, and the checkbox is written so you can't tell what ticking it does. Sounds like Amazon's Iliad."
-    },
-    {
-      "id": "podium", "type": "leaderboard", "theme": "part2",
-      "budgetSec": 60,
-      "notes": "- Congratulate the top 3 by name. Nobody outside the top 10 is shown.",
-      "title": "Final podium"
-    },
-    {
-      "id": "why-they-exist", "type": "slide", "theme": "part2",
-      "budgetSec": 90,
-      "notes": "- A/B tests reward them: conversion goes up, so they ship.\n- We, frontend devs, are the ones who build these components.",
-      "title": "Why they exist",
-      "body": "- A/B tests and conversion metrics reward them\n- Frontend devs are the ones who build these components"
-    },
-    {
-      "id": "would-you-build", "type": "poll", "theme": "part2",
-      "budgetSec": 45,
-      "notes": "- Anonymous poll. **Open**, ~20 s, **Close**, **Reveal results**.\n- Don't judge the \"Build it\" votes: for many it's the honest answer.",
-      "title": "Would you build it?",
-      "question": "Your PM asks for a confirmshaming popup. Would you build it?",
-      "anonymous": true,
-      "options": [
-        { "id": "build", "label": "Build it" },
-        { "id": "push-back", "label": "Push back" },
-        { "id": "refuse", "label": "Refuse" }
-      ]
-    },
-    {
-      "id": "which-is-worse-again", "type": "compare", "theme": "part2",
-      "budgetSec": 60,
-      "notes": "- Same question as step 1. **Open**, ~20 s, **Close**.\n- The big screen shows before vs after: comment on the shift.",
-      "title": "Which is worse? (again)",
-      "question": "Which is worse?",
-      "beforePollId": "which-is-worse",
-      "options": [
-        { "id": "bug", "label": "A bug that crashes millions of computers" },
-        { "id": "feature", "label": "A feature that tricks millions of users" }
-      ]
-    },
-    {
-      "id": "takeaway", "type": "slide", "theme": "part2",
-      "budgetSec": 30,
-      "notes": "- \"Our code doesn't just run. It acts on people.\" Then stay silent for 2 seconds.",
-      "title": "Our code doesn't just run.",
-      "body": "It acts on people.",
-      "phone": "Thanks!"
-    },
-    {
-      "id": "qna", "type": "qna", "theme": "part2",
-      "budgetSec": 300,
-      "notes": "- Highlight one question at a time (it shows big on screen); hide off-topic ones.\n- At the end: **End session** to wipe the data.",
-      "title": "Q&A"
-    }
-  ]
+    "dependencyCount": 0,
+    "steps": [
+        {
+            "id": "join",
+            "type": "lobby",
+            "theme": "part1",
+            "budgetSec": 120,
+            "notes": "- Welcome people, point at the QR code and the room code.\n- Wait until the count stops rising, then go.",
+            "title": "Join the game",
+            "phone": "You're in, wait for the start"
+        },
+        {
+            "id": "which-is-worse",
+            "type": "poll",
+            "theme": "part1",
+            "budgetSec": 60,
+            "notes": "- **Open poll**, give 20 s, **Close**. Do NOT reveal: the result comes back at step 28.\n- Say: \"Keep your answer in mind, we'll ask again at the end.\"",
+            "title": "Which is worse?",
+            "question": "Which is worse?",
+            "hideResults": true,
+            "options": [
+                { "id": "bug", "label": "A bug that crashes millions of computers" },
+                { "id": "feature", "label": "A feature that tricks millions of users" }
+            ]
+        },
+        {
+            "id": "title",
+            "type": "slide",
+            "theme": "part1",
+            "budgetSec": 45,
+            "notes": "- Introduce yourself in one sentence.\n- Two parts: code that hurts by **accident**, and code that hurts by **design**.",
+            "title": "Code With Consequences",
+            "body": "When software hurts people, by accident and by design.\n\n@samy"
+        },
+        {
+            "id": "part-1",
+            "type": "slide",
+            "theme": "part1",
+            "budgetSec": 15,
+            "notes": "- Quick transition. Three incidents, one question each.",
+            "title": "Part 1: When code breaks the world"
+        },
+        {
+            "id": "left-pad-setup",
+            "type": "slide",
+            "theme": "part1",
+            "budgetSec": 75,
+            "notes": "- March 2016: a dev unpublishes 250+ npm packages after a name dispute with Kik.\n- One of them, left-pad, was 11 lines. Thousands of builds broke (React, Babel...).\n- Don't reveal the size yet: next is the guess.",
+            "title": "left-pad",
+            "body": "- **2016**, npm\n- A name dispute with Kik\n- **250+** modules unpublished in one afternoon"
+        },
+        {
+            "id": "dependency-guess",
+            "type": "poll",
+            "theme": "part1",
+            "budgetSec": 45,
+            "notes": "- **Open poll**, ~20 s, **Close**, then Next (the reveal step shows the answer).\n- Check that `dependencyCount` and `correctOptionId` are filled in talk.json!",
+            "title": "Guess our dependency count",
+            "question": "How many dependencies does our project have?",
+            "correctOptionId": "under-100",
+            "options": [
+                { "id": "under-100", "label": "Under 100" },
+                { "id": "100-500", "label": "100–500" },
+                { "id": "500-1000", "label": "500–1,000" },
+                { "id": "over-1000", "label": "Over 1,000" }
+            ]
+        },
+        {
+            "id": "left-pad-reveal",
+            "type": "reveal",
+            "theme": "part1",
+            "budgetSec": 90,
+            "notes": "- Read the real dependency count slowly.\n- Point at the 11 lines: anyone could write this.\n- Lesson: **every dependency is a trust decision**.",
+            "title": "left-pad: the reveal",
+            "pollId": "dependency-guess",
+            "body": "Every dependency is a trust decision.",
+            "code": "module.exports = leftpad;\nfunction leftpad (str, len, ch) {\n  str = String(str);\n  var i = -1;\n  if (!ch && ch !== 0) ch = ' ';\n  len = len - str.length;\n  while (++i < len) {\n    str = ch + str;\n  }\n  return str;\n}"
+        },
+        {
+            "id": "knight-setup",
+            "type": "slide",
+            "theme": "part1",
+            "budgetSec": 60,
+            "notes": "- Aug 1 2012, Knight Capital, new code deployed to 8 servers.\n- Market opens 9:30, something starts buying. Fast.\n- Don't say the cause.",
+            "title": "Knight Capital",
+            "body": "- **August 1, 2012**\n- A trading firm\n- A new deploy to **8** servers"
+        },
+        {
+            "id": "knight-cause",
+            "type": "poll",
+            "theme": "part1",
+            "budgetSec": 45,
+            "notes": "- **Open poll**, ~20 s, **Close**, then Next for the reveal.\n- Answer: old code nobody deleted.",
+            "title": "What caused it?",
+            "question": "What caused it?",
+            "correctOptionId": "dead-code",
+            "options": [
+                { "id": "hacker", "label": "Hacker" },
+                { "id": "typo", "label": "Typo" },
+                { "id": "dead-code", "label": "Old code nobody deleted" },
+                { "id": "algorithm", "label": "Bad algorithm" }
+            ]
+        },
+        {
+            "id": "knight-reveal",
+            "type": "reveal",
+            "theme": "part1",
+            "budgetSec": 90,
+            "notes": "- One of 8 servers missed the deploy; a recycled flag woke up dead \"Power Peg\" code.\n- ~$440M lost in ~45 min (company figure; the SEC says more than $460M).\n- Lessons: delete dead code, never recycle flags, automate deploys.",
+            "title": "Knight Capital: the reveal",
+            "pollId": "knight-cause",
+            "body": "- Dead *Power Peg* code, a recycled flag, one server missed\n- About **$440M** lost in about **45 min**\n- Delete dead code, never recycle flags, automate deploys"
+        },
+        {
+            "id": "crowdstrike-setup",
+            "type": "slide",
+            "theme": "part1",
+            "budgetSec": 60,
+            "notes": "- July 19 2024, a content update for the Falcon sensor.\n- ~8.5M Windows machines blue-screened: airlines, hospitals, banks.",
+            "title": "CrowdStrike",
+            "body": "- **July 19, 2024**\n- About **8.5M** Windows machines\n- Airlines and hospitals down"
+        },
+        {
+            "id": "crowdstrike-prevent",
+            "type": "poll",
+            "theme": "part1",
+            "budgetSec": 45,
+            "notes": "- **Open poll**, ~20 s, **Close**, **Reveal results** (opinion poll, no right answer).\n- Ask one person why they picked their option.",
+            "title": "What would have prevented it?",
+            "question": "What would have prevented it?",
+            "options": [
+                { "id": "tests", "label": "Better tests" },
+                { "id": "staged-rollout", "label": "Staged rollout" },
+                { "id": "code-review", "label": "Code review" },
+                { "id": "no-kernel", "label": "Not running in the kernel" }
+            ]
+        },
+        {
+            "id": "crowdstrike-reveal",
+            "type": "slide",
+            "theme": "part1",
+            "budgetSec": 90,
+            "notes": "- The template expected 21 fields, the sensor supplied 20: out-of-bounds read in the kernel.\n- Shipped to every machine at once, live ~78 minutes.\n- Myth: the \"file full of zeros\" was not the root cause.",
+            "title": "CrowdStrike: the root cause",
+            "body": "- **21** fields expected, **20** supplied\n- Sent to every machine at once, live for about **78 minutes**\n- Myth: the \"file full of zeros\" was not the cause"
+        },
+        {
+            "id": "transition",
+            "type": "slide",
+            "theme": "part1",
+            "budgetSec": 20,
+            "notes": "- Pause. Let the line land.\n- \"Now: code that works exactly as designed.\"",
+            "title": "Those were accidents.",
+            "body": "Now: code that works exactly as designed."
+        },
+        {
+            "id": "dark-pattern",
+            "type": "slide",
+            "theme": "part2",
+            "budgetSec": 60,
+            "notes": "- Definition: an interface designed to make you do something you didn't mean to.\n- Term coined by Harry Brignull around 2010.",
+            "title": "What is a dark pattern?",
+            "body": "An interface designed to make you do something you didn't mean to do.\n\nTerm coined by Harry Brignull, around **2010**."
+        },
+        {
+            "id": "amazon-iliad",
+            "type": "slide",
+            "theme": "part2",
+            "budgetSec": 90,
+            "notes": "- Sept 2025: Amazon pays $2.5B to settle the FTC Prime case.\n- The cancel flow was nicknamed *Iliad* internally: long like the epic.\n- Button text example: \"No, I don't want Free Shipping\".",
+            "title": "The Amazon \"Iliad\" case",
+            "body": "- **$2.5B** FTC settlement, Sept 2025\n- A cancel flow nicknamed *Iliad*\n- \"No, I don't want Free Shipping\""
+        },
+        {
+            "id": "game-rules",
+            "type": "slide",
+            "theme": "part2",
+            "budgetSec": 45,
+            "notes": "- Tap the element, **Lock in**; clean screen = **No pattern here**.\n- +100 correct, up to +50 speed, -50 wrong. 30 s per round.\n- In each round, **Start round** starts a 3 s countdown.",
+            "title": "Spot the Dark Pattern",
+            "phone": "Get ready! Tap the manipulative element, then Lock in. Clean screen? Tap \"No pattern here\".",
+            "body": "- Tap the manipulative element, then **Lock in**\n- Clean screen? Tap **No pattern here**\n- Correct: **+100**, up to **+50** for speed\n- Wrong: **−50**"
+        },
+        {
+            "id": "round-1",
+            "type": "game-round",
+            "theme": "part2",
+            "budgetSec": 75,
+            "notes": "- Flow: **Start round** > wait for locks > **Show heatmap** > **Reveal answer** > **Show leaderboard** > Next.\n- Answer: the urgency banner (fake urgency).",
+            "title": "Round 1: ShopNest",
+            "round": 1,
+            "product": "ShopNest",
+            "screenComponent": "ShopNest",
+            "context": "You're buying a sofa",
+            "elements": [
+                { "id": "product-photo", "label": "Product photo" },
+                { "id": "price", "label": "Price" },
+                { "id": "urgency-banner", "label": "Urgency banner and timer" },
+                { "id": "add-to-cart", "label": "Add to cart" },
+                { "id": "reviews", "label": "Reviews" },
+                { "id": "delivery-info", "label": "Delivery info" },
+                { "id": "wishlist", "label": "Save to wishlist" }
+            ],
+            "answers": [["urgency-banner"]],
+            "patternName": "Fake urgency and scarcity",
+            "explanation": "The counter and timer are invented to rush you; reload the page and they reset."
+        },
+        {
+            "id": "round-2",
+            "type": "game-round",
+            "theme": "part2",
+            "budgetSec": 75,
+            "notes": "- Answer: the \"Manage options\" link (Accept all also counts). Visual interference.",
+            "title": "Round 2: StreamBox",
+            "round": 2,
+            "product": "StreamBox",
+            "screenComponent": "StreamBox",
+            "context": "You just opened a streaming site",
+            "elements": [
+                { "id": "brand-logo", "label": "StreamBox logo" },
+                { "id": "modal-title", "label": "Modal title" },
+                { "id": "privacy-text", "label": "Consent text" },
+                { "id": "privacy-policy", "label": "Privacy policy link" },
+                { "id": "accept-all", "label": "Accept all" },
+                { "id": "manage-options", "label": "Manage options" }
+            ],
+            "answers": [["manage-options", "accept-all"]],
+            "patternName": "Visual interference",
+            "explanation": "Both choices exist, but one is designed to be almost invisible."
+        },
+        {
+            "id": "round-3",
+            "type": "game-round",
+            "theme": "part2",
+            "budgetSec": 75,
+            "notes": "- CLEAN screen: the right answer is \"No pattern here\".\n- Point out: cancel is as visible as change plan, renewal date shown.",
+            "title": "Round 3: FitTrack",
+            "round": 3,
+            "product": "FitTrack",
+            "screenComponent": "FitTrack",
+            "context": "You're checking your subscription",
+            "elements": [
+                { "id": "plan-card", "label": "Current plan" },
+                { "id": "renewal-date", "label": "Renewal date" },
+                { "id": "payment-method", "label": "Payment method" },
+                { "id": "billing-history", "label": "Billing history" },
+                { "id": "change-plan", "label": "Change plan" },
+                { "id": "cancel-subscription", "label": "Cancel subscription" },
+                { "id": "help-link", "label": "Help link" }
+            ],
+            "answers": [],
+            "patternName": "Clean",
+            "explanation": "Cancelling is as easy as subscribing, and the renewal date is visible."
+        },
+        {
+            "id": "round-4",
+            "type": "game-round",
+            "theme": "part2",
+            "budgetSec": 75,
+            "notes": "- Answer: the pre-checked travel protection (sneaking into basket).",
+            "title": "Round 4: TravelGo",
+            "round": 4,
+            "product": "TravelGo",
+            "screenComponent": "TravelGo",
+            "context": "You're paying for a flight",
+            "elements": [
+                { "id": "flight-card", "label": "Flight summary" },
+                { "id": "passenger", "label": "Passenger" },
+                { "id": "seat", "label": "Seat" },
+                { "id": "travel-protection", "label": "Travel protection checkbox" },
+                { "id": "price-breakdown", "label": "Price breakdown" },
+                { "id": "pay-button", "label": "Pay button" }
+            ],
+            "answers": [["travel-protection"]],
+            "patternName": "Preselection (sneaking into basket)",
+            "explanation": "You pay for something you never chose unless you notice and uncheck it."
+        },
+        {
+            "id": "round-5",
+            "type": "game-round",
+            "theme": "part2",
+            "budgetSec": 75,
+            "notes": "- Answer: the decline link \"No thanks, I prefer being uninformed\" (confirmshaming).",
+            "title": "Round 5: NewsDaily",
+            "round": 5,
+            "product": "NewsDaily",
+            "screenComponent": "NewsDaily",
+            "context": "You're reading an article",
+            "elements": [
+                { "id": "masthead", "label": "Masthead" },
+                { "id": "article", "label": "Article" },
+                { "id": "brief-title", "label": "Get the morning brief" },
+                { "id": "email-field", "label": "Email field" },
+                { "id": "subscribe-button", "label": "Subscribe" },
+                { "id": "decline-link", "label": "Decline link" },
+                { "id": "fine-print", "label": "Fine print" }
+            ],
+            "answers": [["decline-link"]],
+            "patternName": "Confirmshaming",
+            "explanation": "Saying no is worded to make you feel bad about yourself."
+        },
+        {
+            "id": "round-6",
+            "type": "game-round",
+            "theme": "part2",
+            "budgetSec": 75,
+            "notes": "- CLEAN screen: price, end date and the way out are all stated up front.",
+            "title": "Round 6: ReadMore",
+            "round": 6,
+            "product": "ReadMore",
+            "screenComponent": "ReadMore",
+            "context": "You're starting a free trial",
+            "elements": [
+                { "id": "book-art", "label": "Book covers" },
+                { "id": "trial-price", "label": "Price after trial" },
+                { "id": "reminder-note", "label": "Reminder note" },
+                { "id": "cancel-note", "label": "Cancel note" },
+                { "id": "email-field", "label": "Email field" },
+                { "id": "start-trial", "label": "Start trial" },
+                { "id": "sign-in-link", "label": "Sign in link" }
+            ],
+            "answers": [],
+            "patternName": "Clean",
+            "explanation": "The price, the end date and the way out are all stated up front."
+        },
+        {
+            "id": "round-7",
+            "type": "game-round",
+            "theme": "part2",
+            "budgetSec": 150,
+            "notes": "- DEBATE round: not scored, no leaderboard.\n- After the reveal, ask one person from each side to defend their choice. Keep it to ~1 min.",
+            "title": "Round 7: CloudPix (debate)",
+            "round": 7,
+            "product": "CloudPix",
+            "screenComponent": "CloudPixPlans",
+            "context": "You're choosing a storage plan",
+            "elements": [
+                { "id": "storage-info", "label": "Storage info" },
+                { "id": "monthly-plan", "label": "Monthly plan" },
+                { "id": "yearly-plan", "label": "Yearly plan (pre-selected)" },
+                { "id": "save-badge", "label": "Save 17% badge" },
+                { "id": "continue-button", "label": "Continue" },
+                { "id": "terms-link", "label": "Terms link" }
+            ],
+            "answers": [],
+            "scored": false,
+            "patternName": "Grey zone: nudge or manipulation?",
+            "explanation": "Look at how the room split. One person from each side: defend your choice."
+        },
+        {
+            "id": "round-8",
+            "type": "game-round",
+            "theme": "part2",
+            "budgetSec": 90,
+            "notes": "- BONUS: two patterns, players lock up to 2 elements.\n- Answers: \"Step 4 of 5\" (or the Continue cancelling link) + the double-negative checkbox.\n- Tie back to Amazon's Iliad.",
+            "title": "Round 8: CloudPix (bonus)",
+            "round": 8,
+            "product": "CloudPix",
+            "screenComponent": "CloudPixCancel",
+            "context": "BONUS: find both. You're cancelling your plan",
+            "elements": [
+                { "id": "step-indicator", "label": "Step 4 of 5" },
+                { "id": "memories-card", "label": "Memories card" },
+                { "id": "offer-card", "label": "Offer card" },
+                { "id": "double-negative", "label": "Double-negative checkbox" },
+                { "id": "keep-plan", "label": "Keep my 2 TB" },
+                { "id": "continue-cancelling", "label": "Continue cancelling" }
+            ],
+            "answers": [["step-indicator", "continue-cancelling"], ["double-negative"]],
+            "maxSelections": 2,
+            "patternName": "Obstruction (roach motel) + Trick wording",
+            "explanation": "Leaving takes five screens while joining took one, and the checkbox is written so you can't tell what ticking it does. Sounds like Amazon's Iliad."
+        },
+        {
+            "id": "podium",
+            "type": "leaderboard",
+            "theme": "part2",
+            "budgetSec": 60,
+            "notes": "- Congratulate the top 3 by name. Nobody outside the top 10 is shown.",
+            "title": "Final podium"
+        },
+        {
+            "id": "why-they-exist",
+            "type": "slide",
+            "theme": "part2",
+            "budgetSec": 90,
+            "notes": "- A/B tests reward them: conversion goes up, so they ship.\n- We, frontend devs, are the ones who build these components.",
+            "title": "Why they exist",
+            "body": "- A/B tests and conversion metrics reward them\n- Frontend devs are the ones who build these components"
+        },
+        {
+            "id": "would-you-build",
+            "type": "poll",
+            "theme": "part2",
+            "budgetSec": 45,
+            "notes": "- Anonymous poll. **Open**, ~20 s, **Close**, **Reveal results**.\n- Don't judge the \"Build it\" votes: for many it's the honest answer.",
+            "title": "Would you build it?",
+            "question": "Your PM asks for a confirmshaming popup. Would you build it?",
+            "anonymous": true,
+            "options": [
+                { "id": "build", "label": "Build it" },
+                { "id": "push-back", "label": "Push back" },
+                { "id": "refuse", "label": "Refuse" }
+            ]
+        },
+        {
+            "id": "which-is-worse-again",
+            "type": "compare",
+            "theme": "part2",
+            "budgetSec": 60,
+            "notes": "- Same question as step 1. **Open**, ~20 s, **Close**.\n- The big screen shows before vs after: comment on the shift.",
+            "title": "Which is worse? (again)",
+            "question": "Which is worse?",
+            "beforePollId": "which-is-worse",
+            "options": [
+                { "id": "bug", "label": "A bug that crashes millions of computers" },
+                { "id": "feature", "label": "A feature that tricks millions of users" }
+            ]
+        },
+        {
+            "id": "takeaway",
+            "type": "slide",
+            "theme": "part2",
+            "budgetSec": 30,
+            "notes": "- \"Our code doesn't just run. It acts on people.\" Then stay silent for 2 seconds.",
+            "title": "Our code doesn't just run.",
+            "body": "It acts on people.",
+            "phone": "Thanks!"
+        },
+        {
+            "id": "qna",
+            "type": "qna",
+            "theme": "part2",
+            "budgetSec": 300,
+            "notes": "- Highlight one question at a time (it shows big on screen); hide off-topic ones.\n- At the end: **End session** to wipe the data.",
+            "title": "Q&A"
+        }
+    ]
 }
