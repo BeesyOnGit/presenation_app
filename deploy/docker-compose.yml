@@ -1,0 +1,24 @@
+# Production stack on the VPS: the presentation (API + built client in one image).
+# Values come from the `.env` next to this file (see .env.production.example).
+# The image is pinned by deploy.sh in docker-compose.override.yml (loaded automatically by compose).
+
+name: presentation
+
+services:
+  app:
+    # image: set by deploy.sh in docker-compose.override.yml (the deployed image)
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      # Live session snapshot: survives restarts and redeploys mid-talk
+      - data:/app/data
+    ports:
+      - "${APP_BIND:-127.0.0.1}:${PORT}:${PORT}"
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"
+
+volumes:
+  data:

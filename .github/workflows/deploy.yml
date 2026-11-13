@@ -1,0 +1,127 @@
+name: CI / CD
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+# One deployment at a time; a newer push waits for the running one
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  test-api:
+    name: Test API
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: presentation_api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: presentation_api
+      - run: cargo test --locked
+
+  test-web:
+    name: Test web
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: presentation_web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: presentation_web/package-lock.json
+      - run: npm ci
+      - run: npm run build  # tsc -b + vite build
+
+  build:
+    name: Build & push image
+    needs: [test-api, test-web]
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image: ${{ steps.meta.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: meta
+        name: Image name (GHCR needs lowercase)
+        run: echo "image=${REGISTRY}/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # One image: the API binary + the built presentation_web it serves
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ steps.meta.outputs.image }}:${{ github.sha }}
+            ${{ steps.meta.outputs.image }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy to VPS
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      packages: read
+    env:
+      IMAGE: ${{ needs.build.outputs.image }}:${{ github.sha }}
+      DEPLOY_PATH: ${{ vars.DEPLOY_PATH || 'presentation' }}
+      SSH_PORT: ${{ secrets.VPS_PORT || '22' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -p "$SSH_PORT" -H "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
+          cat >> ~/.ssh/config <<EOF
+          Host vps
+            HostName ${{ secrets.VPS_HOST }}
+            User ${{ secrets.VPS_USER }}
+            Port ${SSH_PORT}
+            IdentityFile ~/.ssh/id_deploy
+          EOF
+
+      - name: Upload stack files
+        run: |
+          ssh vps "mkdir -p ${DEPLOY_PATH}"
+          scp deploy/docker-compose.yml deploy/deploy.sh deploy/.env.production.example "vps:${DEPLOY_PATH}/"
+
+      - name: Deploy
+        run: |
+          # The job token lets the VPS pull the (private) image; it expires when the job ends
+          echo "${{ secrets.GITHUB_TOKEN }}" | ssh vps "docker login ${REGISTRY} -u ${{ github.actor }} --password-stdin"
+          ssh vps "cd ${DEPLOY_PATH} && IMAGE='${IMAGE}' bash deploy.sh"
+
+      - name: Log out of the registry
+        if: always()
+        run: ssh vps "docker logout ${REGISTRY}" || true
