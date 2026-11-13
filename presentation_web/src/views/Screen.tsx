@@ -108,8 +108,9 @@ function Bars({ options, counts, total, correct }: { options: Choice[]; counts: 
               {right ? <Icon name="check" size={40} /> : letter(i)}
             </span>
             <div style={{ position: 'relative', height: 100, borderRadius: 16, background: 'var(--surface)', overflow: 'hidden', boxShadow: right ? '0 0 0 3px var(--green)' : undefined }}>
-              <div className="bar-fill" style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: counts ? `${(n / max) * 100}%` : 0, background: right ? 'var(--green)' : correct ? '#22272F' : 'var(--line)', borderRadius: 16 }} />
-              <span style={{ position: 'absolute', inset: '0 32px', display: 'flex', alignItems: 'center', gap: 18, fontSize: 42, fontWeight: 600, color: right ? 'var(--bg)' : correct ? 'var(--muted)' : undefined }}>
+              <div className="bar-fill" style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: counts ? `${(n / max) * 100}%` : 0, background: right ? 'rgba(75, 227, 160, 0.35)' : correct ? '#22272F' : 'var(--line)', borderRadius: 16 }} />
+              {/* Light text: the fill is as wide as the votes, so it may not sit under the label */}
+              <span style={{ position: 'absolute', inset: '0 32px', display: 'flex', alignItems: 'center', gap: 18, fontSize: 42, fontWeight: 600, color: right ? 'var(--text)' : correct ? 'var(--muted)' : undefined }}>
                 <span style={{ flex: 1 }}>{o.label}</span>
                 {right && <span style={{ ...MONO, fontSize: 22, fontWeight: 800, letterSpacing: '0.12em', padding: '6px 12px', borderRadius: 8, background: 'var(--bg)', color: 'var(--green)' }}>CORRECT</span>}
               </span>

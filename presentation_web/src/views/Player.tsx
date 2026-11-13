@@ -1,6 +1,6 @@
 // Player (/): join with a nickname, then follow the host. Everything comes from `state`.
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
-import FakeScreen, { H, W } from '../screens'
+import FakeScreen from '../screens'
 import { emit, serverNow, socket, useServerState, useTick } from '../socket'
 import type { Me, State, Step } from '../types'
 import { accent, answerLabels, clock, fmt, Icon, letter, pct } from '../ui'
@@ -521,14 +521,14 @@ function TimerHead({ step, s, now }: { step: Step; s: State; now: number }) {
   )
 }
 
-/** Largest width at which the whole 390×844 screen fits the element, so no element hides below the fold. */
+/** Width of the element: the 390×844 screen fills it edge to edge and scrolls vertically if taller. */
 function useFitWidth() {
   const ref = useRef<HTMLDivElement>(null)
   const [w, setW] = useState(0)
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const ro = new ResizeObserver(([e]) => setW(Math.floor(Math.min(e.contentRect.width, (e.contentRect.height * W) / H))))
+    const ro = new ResizeObserver(([e]) => setW(Math.floor(e.contentRect.width)))
     ro.observe(el)
     return () => ro.disconnect()
   }, [])
@@ -562,7 +562,7 @@ function Play({ s, me, now }: { s: State; me: Me; now: number }) {
   return (
     <div style={{ height: '100dvh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       <TimerHead step={step} s={s} now={now} />
-      <div ref={area} style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', justifyContent: 'center', background: 'var(--surface)' }}>
+      <div ref={area} style={{ flex: 1, minHeight: 0, overflowX: 'hidden', overflowY: 'auto', display: 'flex', justifyContent: 'center', background: 'var(--surface)' }}>
         {width > 0 && <FakeScreen name={step.screenComponent ?? ''} width={width} zones={zones} selected={pick?.id} locked={me.locks} onTap={(id, x, y) => setPick((p) => (p?.id === id ? null : { id, x, y }))} />}
       </div>
       <div style={{ flex: 'none', padding: '12px 16px 22px', display: 'flex', flexDirection: 'column', gap: 10, background: 'var(--bg)', borderTop: '1px solid var(--surface2)' }}>
